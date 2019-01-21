@@ -21,29 +21,29 @@ describe('HomeComponent', () => {
       totalNr: 123,
     } as Episode
   ];
-  
+
   let mockStorageService: any;
 
   beforeEach(async(() => {
 
     mockTrackerService = jasmine.createSpyObj("TrackerService", ['getAllEpisodes']);
     mockTrackerService.getAllEpisodes.and.returnValue(of(episodes));
-    
-    mockStorageService = jasmine.createSpyObj("StorageService", ['retrieveEpisodesSeen', 'storeEpisodesSeen' ]);
-		mockStorageService.retrieveEpisodesSeen.and.returnValue(of(['one', 'two']));
+
+    mockStorageService = jasmine.createSpyObj("StorageService", ['retrieveEpisodesSeen', 'storeEpisodesSeen']);
+    mockStorageService.retrieveEpisodesSeen.and.returnValue(of(['one', 'two']));
     TestBed.overrideTemplate(
-			HomeComponent,
+      HomeComponent,
       "<html>HTML for the component requires all dependent components to be loaded. Differ this to Feature test.</html>");
-      
+
     TestBed.configureTestingModule({
-      declarations: [ HomeComponent ],
+      declarations: [HomeComponent],
       providers: [
-				{ provide: TrackerService, useValue: mockTrackerService },
-				{ provide: StorageService, useValue: mockStorageService },
-				{ provide: Router, useValue: routerSpy },
-			],
+        { provide: TrackerService, useValue: mockTrackerService },
+        { provide: StorageService, useValue: mockStorageService },
+        { provide: Router, useValue: routerSpy },
+      ],
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
@@ -61,14 +61,14 @@ describe('HomeComponent', () => {
       // arrange
       component.episodesSeen = [];
       component.episodesSeen.push(1, 2);
-      
+
       // act 
       let result = component.hasBeenSeen(1);
-      
+
       // assert
       expect(result).toBeTruthy();
     });
-    
+
     it('should return false if episode id is not in list', () => {
       // arrange
       component.episodesSeen = [];
@@ -94,20 +94,45 @@ describe('HomeComponent', () => {
       // assert
       expect(component.episodesSeen.includes(number)).toBeTruthy();
     });
-  });
 
+    it('should save changes', () => {
+      // arrange
+      component.episodesSeen = [];
+      let number = 123;
+
+      // act 
+      component.addToSeen(number);
+
+      // assert 
+      expect(mockStorageService.storeEpisodesSeen).toHaveBeenCalledTimes(1);
+    })
+  });
+  
   describe('removeFromSeen', () => {
     it('should remove passed value from list', () => {
       // arrange
       component.episodesSeen = [];
       let number = 123;
       component.episodesSeen.push(1, 2, number);
-
+      
       // act 
       component.removeFromSeen(number);
-
+      
       // assert
       expect(component.episodesSeen.includes(number)).toBeFalsy();
+    });
+    
+    it('should save changes', () => {
+      // arrange
+      component.episodesSeen = [];
+      let number = 123;
+      component.episodesSeen.push(1, 2, number);
+      
+      // act 
+      component.removeFromSeen(number);
+      
+      // assert
+      expect(mockStorageService.storeEpisodesSeen).toHaveBeenCalledTimes(1);
     });
   });
 
