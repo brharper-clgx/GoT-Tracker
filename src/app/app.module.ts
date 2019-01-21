@@ -33,7 +33,7 @@ import { CollapseModule } from 'ngx-bootstrap/collapse';
   providers: [
 		TrackerService,
 		HttpService,
-    { provide: APP_BASE_HREF, useValue: '/' },
+    // { provide: APP_BASE_HREF, useValue: '/' },
     StorageService,
 	],
   bootstrap: [AppComponent]
