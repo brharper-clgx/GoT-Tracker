@@ -22,7 +22,7 @@ export class HomeComponent implements OnInit {
   constructor(private tracker: TrackerService, private storage: StorageService) {
     this.seasonPremier = new Date('April 14, 2019 00:00:00');
     this.episodesSeen = [];
-    this.seasonCollapse = [false, true, true, true, true, true, true]
+    this.seasonCollapse = [true, true, true, true, true, true, true]
   }
 
   ngOnInit() {
