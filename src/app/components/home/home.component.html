@@ -30,9 +30,11 @@
         <div class="card-header season-header" (click)="seasonCollapse[number-1] = !seasonCollapse[number-1]"
           [attr.aria-expanded]="!seasonCollapse[number-1]">
           <h3>
-            <span *ngIf="seasonCollapse[number-1]">+</span>
-            <span *ngIf="!seasonCollapse[number-1]">-</span>
-            Season {{number}}
+            <!-- <span *ngIf="seasonCollapse[number-1]">+</span> -->
+            <i class="fas fa-plus" *ngIf="seasonCollapse[number-1]"></i>
+            <i class="fas fa-minus" *ngIf="!seasonCollapse[number-1]"></i>
+            <!-- <span *ngIf="!seasonCollapse[number-1]">-</span> -->
+            &nbsp; Season {{number}}
           </h3>
         </div>
         <div class="card-body" [collapse]="seasonCollapse[number-1]">
