@@ -1,0 +1,65 @@
+<div class="container" *ngIf="episodes">
+
+  <div class="row">
+    <div class="col">
+      <h1 class="display-4">{{getDaysRemaining()}} days remaining...</h1>
+    </div>
+  </div>
+
+  <br>
+
+  <div class="row">
+    <div class="col">
+      <div class="alert alert-primary" role="alert">
+        <h4 class="alert-heading">Episodes Per Day: {{getEpisodesPerDay() | number:'1.0-2'}}</h4>
+      </div>
+    </div>
+    <div class="col">
+      <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">Episodes Per Week: {{getEpisodesPerWeek() | number:'1.0-2'}}</h4>
+      </div>
+
+    </div>
+  </div>
+
+  <br>
+
+  <div class="season-list row">
+    <div class="col">
+      <div *ngFor="let number of [1,2,3,4,5,6,7]" class="card season">
+        <div class="card-header season-header" (click)="seasonCollapse[number-1] = !seasonCollapse[number-1]"
+          [attr.aria-expanded]="!seasonCollapse[number-1]">
+          <h3>
+            <span *ngIf="seasonCollapse[number-1]">+</span>
+            <span *ngIf="!seasonCollapse[number-1]">-</span>
+            Season {{number}}
+          </h3>
+        </div>
+        <div class="card-body" [collapse]="seasonCollapse[number-1]">
+          <table class="table">
+            <tbody>
+              <tr *ngFor="let episode of getEpisodesBySeason(number)" class="episode-row">
+                <td>{{episode.nr}}</td>
+                <td>{{episode.name}}</td>
+                <td>
+                  <button *ngIf="hasBeenSeen(episode.totalNr)" (click)="removeFromSeen(episode.totalNr)" type="button"
+                    class="btn btn-success">Seen</button>
+                  <button *ngIf="!hasBeenSeen(episode.totalNr)" (click)="addToSeen(episode.totalNr)" type="button"
+                    class="btn btn-danger">Unseen</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- <h6 *ngFor="let episode of getEpisodesBySeason(number)">
+          {{episode.nr}} {{episode.name}}
+        </h6> -->
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+<br>
+<br>
+<br>
