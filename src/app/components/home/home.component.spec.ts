@@ -107,30 +107,30 @@ describe('HomeComponent', () => {
       expect(mockStorageService.storeEpisodesSeen).toHaveBeenCalledTimes(1);
     })
   });
-  
+
   describe('removeFromSeen', () => {
     it('should remove passed value from list', () => {
       // arrange
       component.episodesSeen = [];
       let number = 123;
       component.episodesSeen.push(1, 2, number);
-      
+
       // act 
       component.removeFromSeen(number);
-      
+
       // assert
       expect(component.episodesSeen.includes(number)).toBeFalsy();
     });
-    
+
     it('should save changes', () => {
       // arrange
       component.episodesSeen = [];
       let number = 123;
       component.episodesSeen.push(1, 2, number);
-      
+
       // act 
       component.removeFromSeen(number);
-      
+
       // assert
       expect(mockStorageService.storeEpisodesSeen).toHaveBeenCalledTimes(1);
     });
@@ -151,6 +151,136 @@ describe('HomeComponent', () => {
 
       // assert
       expect(result.length).toBe(2);
+    });
+  });
+
+  describe('addSeasonToSeen', () => {
+    it('given season number should add all episodes of that season and no others', () => {
+      // arrange
+      component.episodes = [
+        { totalNr: 1, season: 1 } as Episode,
+        { totalNr: 2, season: 1 } as Episode,
+        { totalNr: 3, season: 2 } as Episode,
+        { totalNr: 4, season: 2 } as Episode,
+      ];
+
+      component.episodesSeen = [];
+
+      // act
+      component.addSeasonToSeen(2);
+
+      // assert
+      expect(component.episodesSeen.length).toBe(2);
+    });
+    it('should not duplicate episodes already in episodesSeen', () => {
+      // arrange
+      component.episodes = [
+        { totalNr: 1, season: 1 } as Episode,
+        { totalNr: 2, season: 1 } as Episode,
+        { totalNr: 3, season: 2 } as Episode,
+        { totalNr: 4, season: 2 } as Episode,
+      ];
+
+      component.episodesSeen = [4];
+
+      // act
+      component.addSeasonToSeen(2);
+
+      // assert
+      expect(component.episodesSeen.length).toBe(2);
+    });
+    it('should call storeEpisodesSeen', () => {
+      // arrange
+      component.episodes = [
+        { totalNr: 1, season: 1 } as Episode,
+        { totalNr: 2, season: 1 } as Episode,
+        { totalNr: 3, season: 2 } as Episode,
+        { totalNr: 4, season: 2 } as Episode,
+      ];
+
+      component.episodesSeen = [];
+
+      // act
+      component.addSeasonToSeen(2);
+
+      // assert
+      expect(mockStorageService.storeEpisodesSeen).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('removeSeasonFromSeen', () => {
+    it('should remove all episodes from a season', () => {
+      // arrange
+      component.episodes = [
+        { totalNr: 1, season: 1 } as Episode,
+        { totalNr: 2, season: 1 } as Episode,
+        { totalNr: 3, season: 2 } as Episode,
+        { totalNr: 4, season: 2 } as Episode,
+      ];
+
+      component.episodesSeen = [1, 4];
+
+      // act
+      component.removeSeasonFromSeen(2);
+
+      // assert
+      expect(component.episodesSeen.length).toBe(1);
+    });
+
+    it('should call storeEpisodesSeen only once', () => {
+       // arrange
+       component.episodes = [
+        { totalNr: 1, season: 1 } as Episode,
+        { totalNr: 2, season: 1 } as Episode,
+        { totalNr: 3, season: 2 } as Episode,
+        { totalNr: 4, season: 2 } as Episode,
+        { totalNr: 5, season: 2 } as Episode,
+      ];
+
+      component.episodesSeen = [1, 4, 5];
+
+      // act
+      component.removeSeasonFromSeen(2);
+
+      // assert
+      expect(mockStorageService.storeEpisodesSeen).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('seasonHasBeenSeen', () => {
+    it('should return true if all episodes in a season have been seen', () => {
+      // arrange
+      component.episodes = [
+        { totalNr: 1, season: 1 } as Episode,
+        { totalNr: 2, season: 1 } as Episode,
+        { totalNr: 3, season: 2 } as Episode,
+        { totalNr: 4, season: 2 } as Episode,
+      ];
+
+      component.episodesSeen = [3, 4];
+
+      // act
+      let result = component.seasonHasBeenSeen(2);
+
+      // assert
+      expect(result).toBeTruthy;
+    });
+    it('should return false if not all episodes in a season have been seen', () => {
+      // arrange
+      component.episodes = [
+        { totalNr: 1, season: 1 } as Episode,
+        { totalNr: 2, season: 1 } as Episode,
+        { totalNr: 3, season: 2 } as Episode,
+        { totalNr: 4, season: 2 } as Episode,
+      ];
+
+      component.episodesSeen = [4];
+
+      // act
+      let result = component.seasonHasBeenSeen(2);
+
+      // assert
+      expect(result).toBeTruthy;
     });
   });
 });

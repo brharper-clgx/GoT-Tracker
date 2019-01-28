@@ -29,12 +29,16 @@
       <div *ngFor="let number of [1,2,3,4,5,6,7]" class="card season">
         <div class="card-header season-header" (click)="seasonCollapse[number-1] = !seasonCollapse[number-1]"
           [attr.aria-expanded]="!seasonCollapse[number-1]">
-          <h3>
+          <h3 class="clear-fix">
             <!-- <span *ngIf="seasonCollapse[number-1]">+</span> -->
             <i class="fas fa-plus" *ngIf="seasonCollapse[number-1]"></i>
             <i class="fas fa-minus" *ngIf="!seasonCollapse[number-1]"></i>
             <!-- <span *ngIf="!seasonCollapse[number-1]">-</span> -->
-            &nbsp; Season {{number}}
+            &nbsp; Season {{number}} 
+            <span class="pull-right">
+              <button *ngIf="seasonHasBeenSeen(number)" (click)="[$event.stopPropagation(),removeSeasonFromSeen(number)]" type="button" class="btn btn-success">Seen</button>
+              <button *ngIf="!seasonHasBeenSeen(number)" (click)="[$event.stopPropagation(),addSeasonToSeen(number)]" type="button" class="btn btn-danger">Unseen</button>
+            </span>
           </h3>
         </div>
         <div class="card-body" [collapse]="seasonCollapse[number-1]">

@@ -3,6 +3,7 @@ import { TrackerService } from 'src/app/services/tracker.service';
 import { Episode } from 'src/app/models/episode';
 import { StorageService } from 'src/app/services/storage.service';
 import { Stupid } from 'src/app/models/stupid';
+import { send } from 'q';
 
 @Component({
   selector: 'app-home',
@@ -10,7 +11,6 @@ import { Stupid } from 'src/app/models/stupid';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-
   public episodes: Episode[];
   public seasonPremier: Date;
   public totalEpisodes: number;
@@ -31,8 +31,8 @@ export class HomeComponent implements OnInit {
         this.episodes = result; // Get Season 1-5 from api
         let stupid = new Stupid();
         stupid.getAdditionalEpisodes() // Add season 6 & 7 manually cause the api out of date.
-          .forEach(e => this.episodes.push(e)); 
-        this.episodes = this.episodes.sort((a,b) => a.totalNr - b.totalNr); // Sort
+          .forEach(e => this.episodes.push(e));
+        this.episodes = this.episodes.sort((a, b) => a.totalNr - b.totalNr); // Sort
 
         this.totalEpisodes = this.episodes.length;
       });
@@ -66,7 +66,7 @@ export class HomeComponent implements OnInit {
   }
 
   public hasBeenSeen(number: number): boolean {
-    return !!this.episodesSeen.includes(number);
+    return this.episodesSeen.includes(number);
   }
 
   public addToSeen(number: number) {
@@ -79,7 +79,36 @@ export class HomeComponent implements OnInit {
     this.saveChanges();
   }
 
+  public addSeasonToSeen(seasonNumber: number) {
+    let season = this.getEpisodesBySeason(seasonNumber);
+    season.forEach(s => {
+      if (!this.episodesSeen.includes(s.totalNr)) {
+        this.episodesSeen.push(s.totalNr);
+      }
+    });
+    this.saveChanges();
+  }
+
+  seasonHasBeenSeen(seasonNumber: number): boolean {
+    let season = this.getEpisodesBySeason(seasonNumber);
+    let result = true;
+    season.forEach(s => {
+      if(!this.episodesSeen.includes(s.totalNr)) result = false;
+    });
+    return result;
+  }
+
+  removeSeasonFromSeen(seasonNumber: number) {
+    let season = this.getEpisodesBySeason(seasonNumber);
+    season.forEach(s => {
+      if (this.hasBeenSeen(s.totalNr)) this.episodesSeen.splice(this.episodesSeen.indexOf(s.totalNr), 1);
+    });
+    this.saveChanges();
+    
+  }
+
   public saveChanges() {
     this.storage.storeEpisodesSeen(this.episodesSeen);
   }
+
 }
