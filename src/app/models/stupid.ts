@@ -64,7 +64,7 @@ export class Stupid {
                 totalNr: 60,
                 nr: 10,
                 name: 'The Winds of Winter',
-                season: 7,
+                season: 6,
             } as Episode,
 
             // SEASON 7  
