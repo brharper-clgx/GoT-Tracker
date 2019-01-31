@@ -80,18 +80,17 @@ export class HomeComponent implements OnInit {
   }
 
   public seasonHasBeenSeen(seasonNumber: number): boolean {
-    let seasonIds = this.getEpisodesBySeason(seasonNumber)
-      .map(e => e.totalNr);
-    return this.episodesSeen.some(e => seasonIds.includes(e));
+    return this.getEpisodesBySeason(seasonNumber)
+       .map(e => e.totalNr)
+       .some(e => this.episodeHasBeenSeen(e));
   }
 
   public addSeasonToSeen(seasonNumber: number) {
-    this.getEpisodesBySeason(seasonNumber)
-      .map(e => e.totalNr)
-      .forEach(id => {
-        if (!this.episodesSeen.includes(id))
-          this.episodesSeen.push(id);
-      });
+    this.episodesSeen = this.episodesSeen.concat(
+      this.getEpisodesBySeason(seasonNumber)
+        .map(e => e.totalNr)
+        .filter(id => !this.episodeHasBeenSeen(id))
+    );
     this.saveChanges();
   }
 
@@ -99,8 +98,8 @@ export class HomeComponent implements OnInit {
   public removeSeasonFromSeen(seasonNumber: number) {
     this.episodesSeen = this.episodesSeen
       .filter(e => this.getEpisodesBySeason(seasonNumber)
-          .map(e => e.totalNr)
-          .includes(e)
+        .map(e => e.totalNr)
+        .includes(e)
       );
     this.saveChanges();
   }
@@ -108,5 +107,4 @@ export class HomeComponent implements OnInit {
   private saveChanges() {
     this.storage.storeEpisodesSeen(this.episodesSeen);
   }
-
 }
