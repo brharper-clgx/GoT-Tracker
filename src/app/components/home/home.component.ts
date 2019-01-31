@@ -65,7 +65,7 @@ export class HomeComponent implements OnInit {
     return this.episodes.filter(e => e.season == season);
   }
 
-  public hasBeenSeen(number: number): boolean {
+  public episodeHasBeenSeen(number: number): boolean {
     return this.episodesSeen.includes(number);
   }
 
@@ -75,39 +75,37 @@ export class HomeComponent implements OnInit {
   }
 
   public removeFromSeen(id: number) {
-    this.episodesSeen.splice(this.episodesSeen.indexOf(id), 1);
+    this.episodesSeen = this.episodesSeen.filter(e => e !== id);
     this.saveChanges();
+  }
+
+  public seasonHasBeenSeen(seasonNumber: number): boolean {
+    let seasonIds = this.getEpisodesBySeason(seasonNumber)
+      .map(e => e.totalNr);
+    return this.episodesSeen.some(e => seasonIds.includes(e));
   }
 
   public addSeasonToSeen(seasonNumber: number) {
-    let season = this.getEpisodesBySeason(seasonNumber);
-    season.forEach(s => {
-      if (!this.episodesSeen.includes(s.totalNr)) {
-        this.episodesSeen.push(s.totalNr);
-      }
-    });
+    this.getEpisodesBySeason(seasonNumber)
+      .map(e => e.totalNr)
+      .forEach(id => {
+        if (!this.episodesSeen.includes(id))
+          this.episodesSeen.push(id);
+      });
     this.saveChanges();
   }
 
-  seasonHasBeenSeen(seasonNumber: number): boolean {
-    let season = this.getEpisodesBySeason(seasonNumber);
-    let result = true;
-    season.forEach(s => {
-      if(!this.episodesSeen.includes(s.totalNr)) result = false;
-    });
-    return result;
-  }
 
-  removeSeasonFromSeen(seasonNumber: number) {
-    let season = this.getEpisodesBySeason(seasonNumber);
-    season.forEach(s => {
-      if (this.hasBeenSeen(s.totalNr)) this.episodesSeen.splice(this.episodesSeen.indexOf(s.totalNr), 1);
-    });
+  public removeSeasonFromSeen(seasonNumber: number) {
+    this.getEpisodesBySeason(seasonNumber)
+      .map(e => e.totalNr)
+      .forEach(id => {
+        this.episodesSeen = this.episodesSeen.filter(i => i !== id);
+      });
     this.saveChanges();
-    
   }
 
-  public saveChanges() {
+  private saveChanges() {
     this.storage.storeEpisodesSeen(this.episodesSeen);
   }
 

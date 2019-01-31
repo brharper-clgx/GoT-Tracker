@@ -63,7 +63,7 @@ describe('HomeComponent', () => {
       component.episodesSeen.push(1, 2);
 
       // act 
-      let result = component.hasBeenSeen(1);
+      let result = component.episodeHasBeenSeen(1);
 
       // assert
       expect(result).toBeTruthy();
@@ -75,7 +75,7 @@ describe('HomeComponent', () => {
       component.episodesSeen.push(1, 2);
 
       // act 
-      let result = component.hasBeenSeen(3);
+      let result = component.episodeHasBeenSeen(3);
 
       // assert
       expect(result).toBeFalsy();
