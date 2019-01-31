@@ -97,11 +97,11 @@ export class HomeComponent implements OnInit {
 
 
   public removeSeasonFromSeen(seasonNumber: number) {
-    this.getEpisodesBySeason(seasonNumber)
-      .map(e => e.totalNr)
-      .forEach(id => {
-        this.episodesSeen = this.episodesSeen.filter(i => i !== id);
-      });
+    this.episodesSeen = this.episodesSeen
+      .filter(e => this.getEpisodesBySeason(seasonNumber)
+          .map(e => e.totalNr)
+          .includes(e)
+      );
     this.saveChanges();
   }
 
