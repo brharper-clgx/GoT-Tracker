@@ -34,10 +34,13 @@
             <i class="fas fa-plus" *ngIf="seasonCollapse[number-1]"></i>
             <i class="fas fa-minus" *ngIf="!seasonCollapse[number-1]"></i>
             <!-- <span *ngIf="!seasonCollapse[number-1]">-</span> -->
-            &nbsp; Season {{number}} 
+            &nbsp; Season {{number}}
             <span class="pull-right">
-              <button *ngIf="seasonHasBeenSeen(number)" (click)="[$event.stopPropagation(),removeSeasonFromSeen(number)]" type="button" class="btn btn-success">Seen</button>
-              <button *ngIf="!seasonHasBeenSeen(number)" (click)="[$event.stopPropagation(),addSeasonToSeen(number)]" type="button" class="btn btn-danger">Unseen</button>
+              <button *ngIf="seasonHasBeenSeen(number)"
+                (click)="[$event.stopPropagation(),removeSeasonFromSeen(number)]" type="button"
+                class="btn btn-success">Seen</button>
+              <button *ngIf="!seasonHasBeenSeen(number)" (click)="[$event.stopPropagation(),addSeasonToSeen(number)]"
+                type="button" class="btn btn-danger">Unseen</button>
             </span>
           </h3>
         </div>
@@ -48,9 +51,9 @@
                 <td>{{episode.nr}}</td>
                 <td>{{episode.name}}</td>
                 <td>
-                  <button *ngIf="hasBeenSeen(episode.totalNr)" (click)="removeFromSeen(episode.totalNr)" type="button"
+                  <button *ngIf="episodeHasBeenSeen(episode.totalNr)" (click)="removeFromSeen(episode.totalNr)" type="button"
                     class="btn btn-success">Seen</button>
-                  <button *ngIf="!hasBeenSeen(episode.totalNr)" (click)="addToSeen(episode.totalNr)" type="button"
+                  <button *ngIf="!episodeHasBeenSeen(episode.totalNr)" (click)="addToSeen(episode.totalNr)" type="button"
                     class="btn btn-danger">Unseen</button>
                 </td>
               </tr>
