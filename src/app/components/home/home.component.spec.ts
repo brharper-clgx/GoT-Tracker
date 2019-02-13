@@ -263,7 +263,7 @@ describe('HomeComponent', () => {
       let result = component.seasonHasBeenSeen(2);
 
       // assert
-      expect(result).toBeTruthy;
+      expect(result).toBeTruthy();
     });
     it('should return false if not all episodes in a season have been seen', () => {
       // arrange
@@ -280,7 +280,7 @@ describe('HomeComponent', () => {
       let result = component.seasonHasBeenSeen(2);
 
       // assert
-      expect(result).toBeTruthy;
+      expect(result).toBeFalsy();
     });
   });
 });

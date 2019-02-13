@@ -82,7 +82,7 @@ export class HomeComponent implements OnInit {
   public seasonHasBeenSeen(seasonNumber: number): boolean {
     return this.getEpisodesBySeason(seasonNumber)
        .map(e => e.totalNr)
-       .some(e => this.episodeHasBeenSeen(e));
+       .every(e => this.episodeHasBeenSeen(e));
   }
 
   public addSeasonToSeen(seasonNumber: number) {
